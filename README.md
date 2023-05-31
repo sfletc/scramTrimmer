@@ -6,7 +6,6 @@ RNA Adapter Trimmer is a utility tool written in Go that trims adapter sequences
 
 - Adapter trimming for small RNA reads
 - Optional base trimming from both 5' and 3' ends, useful for NEXTflex library preparation
-- Input validation for adapter sequences
 - Efficient processing using Go's concurrency capabilities
 
 ## Requirements
