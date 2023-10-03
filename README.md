@@ -15,9 +15,9 @@ RNA Adapter Trimmer is a utility tool written in Go that trims adapter sequences
 
 ## Installation from source (Go required)
 
-1. Clone the repository to your local machine using `git clone https://github.com/sfletc/scramTrimmer.git.
-2. Navigate to the project directory with `cd scramTrimmer`.
-3. Build the project using `go build`.
+1. Clone the repository to your local machine using ```git clone https://github.com/sfletc/scramTrimmer.git```.
+2. Navigate to the project directory with ```cd scramTrimmer```.
+3. Build the project using ```go build```.
 
 ## Usage
 
