@@ -1,6 +1,6 @@
-# RNA Adapter Trimmer
+# scramTrimmer
 
-RNA Adapter Trimmer is a utility tool written in Go that trims adapter sequences from small RNA reads. The application is designed to a handle compressed fastq file (.fastq.gz) as an input and produces a compressed fastq file as an output.
+scramTrimmer is a utility tool written in Go that trims adapter sequences from small RNA reads. The application is designed to a handle compressed fastq file (.fastq.gz) as an input and produces a compressed fastq file as an output.
 
 ## Features
 
@@ -10,7 +10,7 @@ RNA Adapter Trimmer is a utility tool written in Go that trims adapter sequences
 
 ## Requirements
 
-- Go version 1.x of installing from source
+- Go version 1.x for installing from source
 - Access to the terminal/command line
 
 ## Installation from source (Go required)
