@@ -21,11 +21,11 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             ## Download Instructions
-            - For Linux (64-bit): Download `ScramAligner-linux-amd64.tar.gz`
-            - For Linux (ARM64): Download `ScramAligner-linux-arm64.tar.gz`
-            - For Windows (64-bit): Download `ScramAligner-windows-amd64.zip`
-            - For macOS (Intel): Download `ScramAligner-darwin-amd64.tar.gz`
-            - For macOS (Apple Silicon): Download `ScramAligner-darwin-arm64.tar.gz`
+            - For Linux (64-bit): Download `ScramTrimmer-linux-amd64.tar.gz`
+            - For Linux (ARM64): Download `ScramTrimmer-linux-arm64.tar.gz`
+            - For Windows (64-bit): Download `ScramTrimmer-windows-amd64.zip`
+            - For macOS (Intel): Download `ScramTrimmer-darwin-amd64.tar.gz`
+            - For macOS (Apple Silicon): Download `ScramTrimmer-darwin-arm64.tar.gz`
           draft: false
           prerelease: false
 
@@ -62,17 +62,16 @@ jobs:
           GOOS: ${{ matrix.os }}
           GOARCH: ${{ matrix.arch }}
         run: |
-          go build -o scramAligner
+          go build -o scramTrimmer
 
       - name: Package release asset
         run: |
-          mkdir scramAligner
-          cp -r scramScripts/scram2Plot scramAligner/
-          mv scramAligner scramAligner/
+          mkdir scramTrimmer
+          mv scramTrimmer scramTrimmer/
           if [[ "${{ matrix.os }}" == "windows" ]]; then
-            zip -r ScramAligner-${{ matrix.os }}-${{ matrix.arch }}.zip scramAligner/
+            zip -r ScramTrimmer-${{ matrix.os }}-${{ matrix.arch }}.zip scramTrimmer/
           else
-            tar -czf ScramAligner-${{ matrix.os }}-${{ matrix.arch }}.tar.gz scramAligner/
+            tar -czf ScramTrimmer-${{ matrix.os }}-${{ matrix.arch }}.tar.gz scramTrimmer/
           fi
 
       - name: Upload Release Asset
@@ -81,6 +80,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: ./ScramAligner-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.os == 'windows' && '.zip' || '.tar.gz' }}
-          asset_name: ScramAligner-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.os == 'windows' && '.zip' || '.tar.gz' }}
+          asset_path: ./ScramTrimmer-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.os == 'windows' && '.zip' || '.tar.gz' }}
+          asset_name: ScramTrimmer-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.os == 'windows' && '.zip' || '.tar.gz' }}
           asset_content_type: application/${{ matrix.os == 'windows' && 'zip' || 'gzip' }}
