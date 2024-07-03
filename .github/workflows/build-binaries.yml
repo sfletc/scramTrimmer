@@ -1,0 +1,86 @@
+name: Build Binaries
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ## Download Instructions
+            - For Linux (64-bit): Download `ScramAligner-linux-amd64.tar.gz`
+            - For Linux (ARM64): Download `ScramAligner-linux-arm64.tar.gz`
+            - For Windows (64-bit): Download `ScramAligner-windows-amd64.zip`
+            - For macOS (Intel): Download `ScramAligner-darwin-amd64.tar.gz`
+            - For macOS (Apple Silicon): Download `ScramAligner-darwin-arm64.tar.gz`
+          draft: false
+          prerelease: false
+
+  build:
+    needs: create_release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: linux
+            arch: amd64
+          - os: linux
+            arch: arm64
+          - os: windows
+            arch: amd64
+          - os: darwin
+            arch: amd64
+          - os: darwin
+            arch: arm64
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.22
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+        run: |
+          go build -o scramAligner
+
+      - name: Package release asset
+        run: |
+          mkdir scramAligner
+          cp -r scramScripts/scram2Plot scramAligner/
+          mv scramAligner scramAligner/
+          if [[ "${{ matrix.os }}" == "windows" ]]; then
+            zip -r ScramAligner-${{ matrix.os }}-${{ matrix.arch }}.zip scramAligner/
+          else
+            tar -czf ScramAligner-${{ matrix.os }}-${{ matrix.arch }}.tar.gz scramAligner/
+          fi
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ./ScramAligner-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.os == 'windows' && '.zip' || '.tar.gz' }}
+          asset_name: ScramAligner-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.os == 'windows' && '.zip' || '.tar.gz' }}
+          asset_content_type: application/${{ matrix.os == 'windows' && 'zip' || 'gzip' }}
