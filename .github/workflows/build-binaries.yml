@@ -66,12 +66,12 @@ jobs:
 
       - name: Package release asset
         run: |
-          mkdir scramTrimmer
-          mv scramTrimmer scramTrimmer/
+          mkdir ScramTrimmer
+          mv scramTrimmer ScramTrimmer/
           if [[ "${{ matrix.os }}" == "windows" ]]; then
-            zip -r ScramTrimmer-${{ matrix.os }}-${{ matrix.arch }}.zip scramTrimmer/
+            zip -r ScramTrimmer-${{ matrix.os }}-${{ matrix.arch }}.zip ScramTrimmer/
           else
-            tar -czf ScramTrimmer-${{ matrix.os }}-${{ matrix.arch }}.tar.gz scramTrimmer/
+            tar -czf ScramTrimmer-${{ matrix.os }}-${{ matrix.arch }}.tar.gz ScramTrimmer/
           fi
 
       - name: Upload Release Asset
